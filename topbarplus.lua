@@ -12,15 +12,7 @@ local localizationService = game:GetService("LocalizationService")
 local playersService = game:GetService("Players")
 local localPlayer = playersService.LocalPlayer
 
-local TopbarPlusReference = loadstring(game:HttpGet("https://raw.githubusercontent.com/1ForeverHD/TopbarPlus/main/src/Icon/TopbarPlusReference.lua"))()
-local referenceObject = TopbarPlusReference.getObject()
-local leadPackage = referenceObject and referenceObject.Value
-if leadPackage and leadPackage ~= iconModule then
-	return require(leadPackage)
-end
-if not referenceObject then
-    TopbarPlusReference.addToReplicatedStorage()
-end
+
 local Icon = {}
 Icon.__index = Icon
 local IconController = loadstring(game:HttpGet("https://raw.githubusercontent.com/1ForeverHD/TopbarPlus/main/src/Icon/IconController.lua"))()
