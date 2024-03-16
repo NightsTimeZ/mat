@@ -12,7 +12,7 @@ local localizationService = game:GetService("LocalizationService")
 
 local IconController = {}
 local Signal = loadstring(game:HttpGet("https://raw.githubusercontent.com/1ForeverHD/TopbarPlus/main/src/Icon/Signal.lua"))()
-local TopbarPlusGui = loadstring(game:HttpGet("https://raw.githubusercontent.com/NightsTimeZ/mat/main/tobarpls.lua"))()
+local TopbarPlusGui = game:GetService("CoreGui"):WaitForChild("TopbarPlus")
 local topbarIcons = {}
 local forceTopbarDisabled = false
 local menuOpen
