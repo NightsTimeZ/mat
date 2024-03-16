@@ -1,4 +1,4 @@
--- LOCAL
+
 local starterGui = game:GetService("StarterGui")
 local guiService = game:GetService("GuiService")
 local hapticService = game:GetService("HapticService")
