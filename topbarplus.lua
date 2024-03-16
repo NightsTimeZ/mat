@@ -965,10 +965,6 @@ function Icon:getSettingDetail(targetSettingName)
 end
 
 function Icon:modifySetting(settingName, dictionary)
-	local settingDetail = self:getSettingDetail(settingName)
-	for key, value in pairs(dictionary) do
-		settingDetail[key] = value
-	end
 	return self
 end
 
