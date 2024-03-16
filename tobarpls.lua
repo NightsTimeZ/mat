@@ -1,7 +1,7 @@
 -- SETUP ICON TEMPLATE
 local topbarPlusGui = Instance.new("ScreenGui")
 topbarPlusGui.Enabled = true
-topbarPlusGui.DisplayOrder = 0
+topbarPlusGui.DisplayOrder = 10
 topbarPlusGui.IgnoreGuiInset = true
 topbarPlusGui.ResetOnSpawn = false
 topbarPlusGui.Name = "TopbarPlus"
@@ -348,7 +348,6 @@ indicator.Active = false
 -- PARENT
 
 topbarPlusGui.Parent = game.CoreGui
-topbarPlusGui.DisplayOrder = 10
 
 
 return topbarPlusGui
