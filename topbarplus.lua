@@ -964,10 +964,6 @@ function Icon:getSettingDetail(targetSettingName)
 	return false
 end
 
-function Icon:modifySetting(settingName, dictionary)
-	return self
-end
-
 function Icon:convertLabelToNumberSpinner(numberSpinner)
 	-- This updates the number spinners appearance
 	self:set("iconLabelSize", UDim2.new(1,0,1,0))
@@ -987,12 +983,8 @@ function Icon:convertLabelToNumberSpinner(numberSpinner)
 	local iconButton = self:getInstance("iconButton")
 	iconButton.ZIndex = 0
 	self:setInstance("iconLabel", textLabel)
-	self:modifySetting("iconText", {instanceNames = {}}) -- We do this to prevent text being modified within the metatable above
 	self:setInstance("iconLabelSpinner", numberSpinner.Frame)
 	local settingsToConvert = {"iconLabelVisible", "iconLabelAnchorPoint", "iconLabelPosition", "iconLabelSize"}
-	for _, settingName in pairs(settingsToConvert) do
-		self:modifySetting(settingName, {instanceNames = {"iconLabelSpinner"}})
-	end
 
 	-- This applies all the values we just updated
 	self:_updateAll()
