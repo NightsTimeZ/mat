@@ -447,7 +447,7 @@ local Library = {
 	WindowFrame = nil,
 	Unloaded = false,
 
-	Theme = "Dark",
+	Theme = "Royx",
 	DialogOpen = false,
 	UseAcrylic = true,
 	Acrylic = true,
