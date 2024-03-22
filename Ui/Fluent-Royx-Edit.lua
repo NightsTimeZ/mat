@@ -3660,6 +3660,9 @@ function Element:New(Idx, Config)
 
 		Dropdown:BuildDropdownList()
 		Dropdown:Display()
+        
+        Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
+		Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
 	end
 
 	Library.Options[Idx] = Dropdown
@@ -6637,4 +6640,3 @@ do
     -- If any scripts are currently running now from task scheduler, the scope won't close until all running threads are closed
     -- (thanks for coming to my ted talk)
 end
-
