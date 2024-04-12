@@ -11,7 +11,7 @@ local voiceChatService = game:GetService("VoiceChatService")
 local localizationService = game:GetService("LocalizationService")
 
 local IconController = {}
-local Signal = loadstring(game:HttpGet("https://raw.githubusercontent.com/1ForeverHD/TopbarPlus/main/src/Icon/Signal.lua"))()
+local Signal = loadstring(game:HttpGet("https://github.com/1ForeverHD/TopbarPlus/blob/2245e37c2869d459bbd99fadd0b26428c926679d/src/Icon/Signal.lua"))()
 local TopbarPlusGui = game:GetService("CoreGui"):WaitForChild("TopbarPlus")
 local topbarIcons = {}
 local forceTopbarDisabled = false
