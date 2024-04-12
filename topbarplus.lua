@@ -22,7 +22,7 @@ local Maid = loadstring(game:HttpGet("https://raw.githubusercontent.com/1Forever
 local activeItems = TopbarPlusGui.ActiveItems
 local topbarContainer = TopbarPlusGui.TopbarContainer
 local iconTemplate = topbarContainer["IconContainer"]
-local DEFAULT_THEME = loadstring(game:HttpGet("https://github.com/1ForeverHD/TopbarPlus/blob/2245e37c2869d459bbd99fadd0b26428c926679d/src/Icon/Themes/Default.lua"))()
+local DEFAULT_THEME = loadstring(game:HttpGet("https://raw.githubusercontent.com/1ForeverHD/TopbarPlus/2245e37c2869d459bbd99fadd0b26428c926679d/src/Icon/Themes/Default.lua"))()
 local THUMB_OFFSET = 55
 local DEFAULT_FORCED_GROUP_VALUES = {}
 
