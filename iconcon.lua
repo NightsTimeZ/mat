@@ -10,7 +10,7 @@ local VRService = game:GetService("VRService")
 local voiceChatService = game:GetService("VoiceChatService")
 local localizationService = game:GetService("LocalizationService")
 
-local IconController = {}
+local IconController = {}--aaa
 local Signal = loadstring(game:HttpGet("https://raw.githubusercontent.com/1ForeverHD/TopbarPlus/2245e37c2869d459bbd99fadd0b26428c926679d/src/Icon/Signal.lua"))()
 local TopbarPlusGui = game:GetService("CoreGui"):WaitForChild("TopbarPlus")
 local topbarIcons = {}
