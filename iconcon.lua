@@ -282,7 +282,7 @@ function IconController.updateTopbar()
 		topbarUpdating = true
 		runService.Heartbeat:Wait()
 		topbarUpdating = false
-		
+
 		for alignment, alignmentInfo in pairs(alignmentDetails) do
 			alignmentInfo.records = {}
 		end
@@ -365,7 +365,7 @@ function IconController.updateTopbar()
 				local oppositeAlignment = (alignment == "left" and "right") or "left"
 				local oppositeAlignmentInfo = alignmentDetails[oppositeAlignment]
 				local oppositeOverflowIcon = IconController.getIcon("_overflowIcon-"..oppositeAlignment)
-				
+
 				-- This determines whether any icons (from opposite or mid alignment) are overlapping with this alignment
 				local overflowBoundaryX = getBoundaryX(overflowIcon, alignment)
 				if overflowIcon.enabled then
@@ -463,9 +463,9 @@ function IconController.updateTopbar()
 							break
 						end
 					end
-				
+
 				else
-					
+
 					-- This checks to see if the lowest/highest (depending on left/right) ordered overlapping icon is no longer overlapping, removes from the dropdown, and repeats if valid
 					local winningOrder, winningOverlappedIcon
 					local totalOverlappingIcons = #overflowIcon.dropdownIcons
@@ -544,7 +544,7 @@ function IconController.setTopbarEnabled(bool, forceBool)
 				if controllerMenuOverride and controllerMenuOverride.Connected then
 					controllerMenuOverride:Disconnect()
 				end
-				
+
 				if hapticService:IsVibrationSupported(Enum.UserInputType.Gamepad1) and hapticService:IsMotorSupported(Enum.UserInputType.Gamepad1,Enum.VibrationMotor.Small) then
 					hapticService:SetMotor(Enum.UserInputType.Gamepad1,Enum.VibrationMotor.Small,1)
 					delay(0.2,function()
@@ -561,8 +561,8 @@ function IconController.setTopbarEnabled(bool, forceBool)
 					0.1,
 					true
 				)
-				
-				
+
+
 				local selectIcon
 				local targetOffset = 0
 				IconController:_updateSelectionGroup()
@@ -809,303 +809,11 @@ function IconController.setupHealthbar()
 	createdFakeHealthbarIcon = true
 
 	-- Create a fake healthbar icon to mimic the core health gui
-	task.defer(function()
-		runService.Heartbeat:Wait()
-		local Icon = require(iconModule)
-
-		Icon.new()
-			:setProperty("internalIcon", true)
-			:setName("_FakeHealthbar")
-			:setRight()
-			:setOrder(-420)
-			:setSize(80, 32)
-			:lock()
-			:set("iconBackgroundTransparency", 1)
-			:give(function(icon)
-
-				local healthContainer = Instance.new("Frame")
-				healthContainer.Name = "HealthContainer"
-				healthContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-				healthContainer.BorderSizePixel = 0
-				healthContainer.AnchorPoint = Vector2.new(0, 0.5)
-				healthContainer.Position = UDim2.new(0, 0, 0.5, 0)
-				healthContainer.Size = UDim2.new(1, 0, 0.2, 0)
-				healthContainer.Visible = true
-				healthContainer.ZIndex = 11
-				healthContainer.Parent = icon.instances.iconButton
-
-				local corner = Instance.new("UICorner")
-				corner.CornerRadius = UDim.new(1, 0)
-				corner.Parent = healthContainer
-
-				local healthFrame = healthContainer:Clone()
-				healthFrame.Name = "HealthFrame"
-				healthFrame.BackgroundColor3 = Color3.fromRGB(167, 167, 167)
-				healthFrame.BorderSizePixel = 0
-				healthFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-				healthFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-				healthFrame.Size = UDim2.new(1, -2, 1, -2)
-				healthFrame.Visible = true
-				healthFrame.ZIndex = 12
-				healthFrame.Parent = healthContainer
-
-				local healthBar = healthFrame:Clone()
-				healthBar.Name = "HealthBar"
-				healthBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				healthBar.BorderSizePixel = 0
-				healthBar.AnchorPoint = Vector2.new(0, 0.5)
-				healthBar.Position = UDim2.new(0, 0, 0.5, 0)
-				healthBar.Size = UDim2.new(0.5, 0, 1, 0)
-				healthBar.Visible = true
-				healthBar.ZIndex = 13
-				healthBar.Parent = healthFrame
-
-				local START_HEALTHBAR_COLOR = Color3.fromRGB(27, 252, 107)
-				local MID_HEALTHBAR_COLOR = Color3.fromRGB(250, 235, 0)
-				local END_HEALTHBAR_COLOR = Color3.fromRGB(255, 28, 0)
-
-				local function powColor3(color, pow)
-					return Color3.new(
-						math.pow(color.R, pow),
-						math.pow(color.G, pow),
-						math.pow(color.B, pow)
-					)
-				end
-
-				local function lerpColor(colorA, colorB, frac, gamma)
-					gamma = gamma or 2.0
-					local CA = powColor3(colorA, gamma)
-					local CB = powColor3(colorB, gamma)
-					return powColor3(CA:Lerp(CB, frac), 1/gamma)
-				end
-
-				local firstTimeEnabling = true
-				local function listenToHealth(character)
-					if not character then
-						return
-					end
-					local humanoid = character:WaitForChild("Humanoid", 10)
-					if not humanoid then
-						return
-					end
-
-					local function updateHealthBar()
-						local realHealthbarEnabled = starterGui:GetCoreGuiEnabled(Enum.CoreGuiType.Health)
-						local healthInterval = humanoid.Health / humanoid.MaxHealth
-						if healthInterval == 1 or IconController.healthbarDisabled or (firstTimeEnabling and realHealthbarEnabled == false) then
-							if icon.enabled then
-								icon:setEnabled(false)
-							end
-							return
-						elseif healthInterval < 1 then
-							if not icon.enabled then
-								icon:setEnabled(true)
-							end
-							firstTimeEnabling = false
-							if realHealthbarEnabled then
-								starterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
-							end
-						end
-						local startInterval = 0.9
-						local endInterval = 0.1
-						local m = 1/(startInterval - endInterval)
-						local c = -m*endInterval
-						local colorIntervalAbsolute = (m*healthInterval) + c
-						local colorInterval = (colorIntervalAbsolute > 1 and 1) or (colorIntervalAbsolute < 0 and 0) or colorIntervalAbsolute
-						local firstColor = (healthInterval > 0.5 and START_HEALTHBAR_COLOR) or MID_HEALTHBAR_COLOR
-						local lastColor = (healthInterval > 0.5 and MID_HEALTHBAR_COLOR) or END_HEALTHBAR_COLOR
-						local doubleSubtractor = (1-colorInterval)*2
-						local modifiedColorInterval = (healthInterval > 0.5 and (1-doubleSubtractor)) or (2-doubleSubtractor)
-						local newHealthFillColor = lerpColor(lastColor, firstColor, modifiedColorInterval)
-						local newHealthFillSize = UDim2.new(healthInterval, 0, 1, 0)
-						healthBar.BackgroundColor3 = newHealthFillColor
-						healthBar.Size = newHealthFillSize
-					end
-
-					humanoid.HealthChanged:Connect(updateHealthBar)
-					IconController.healthbarDisabledSignal:Connect(updateHealthBar)
-					updateHealthBar()
-				end
-				localPlayer.CharacterAdded:Connect(function(character)
-					listenToHealth(character)
-				end)
-				task.spawn(listenToHealth, localPlayer.Character)
-			end)
-	end)
-end
-
-function IconController._determineControllerDisplay()
-	local mouseEnabled = userInputService.MouseEnabled
-	local controllerEnabled = userInputService.GamepadEnabled
-	local controllerOptionIcon = IconController.getIcon("_TopbarControllerOption")
-	if mouseEnabled and controllerEnabled then
-		-- Show icon (if option not disabled else hide)
-		if not disableControllerOption then
-			controllerOptionIcon:setEnabled(true)
-		else
-			controllerOptionIcon:setEnabled(false)
-		end
-	elseif mouseEnabled and not controllerEnabled then
-		-- Hide icon, disableControllerMode
-		controllerOptionIcon:setEnabled(false)
-		IconController._enableControllerMode(false)
-		controllerOptionIcon:deselect()
-	elseif not mouseEnabled and controllerEnabled then
-		-- Hide icon, _enableControllerMode
-		controllerOptionIcon:setEnabled(false)
-		IconController._enableControllerMode(true)
-	end
 end
 
 
 
 -- BEHAVIOUR
---Controller support
-coroutine.wrap(function()
-	
-	-- Create PC 'Enter Controller Mode' Icon
-	runService.Heartbeat:Wait() -- This is required to prevent an infinite recursion
-	local Icon = require(iconModule)
-	local controllerOptionIcon = Icon.new()
-		:setProperty("internalIcon", true)
-		:setName("_TopbarControllerOption")
-		:setOrder(100)
-		:setImage(11162828670)
-		:setRight()
-		:setEnabled(false)
-		:setTip("Controller mode")
-		:setProperty("deselectWhenOtherIconSelected", false)
-
-	-- This decides what controller widgets and displays to show based upon their connected inputs
-	-- For example, if on PC with a controller, give the player the option to enable controller mode with a toggle
-	-- While if using a console (no mouse, but controller) then bypass the toggle and automatically enable controller mode
-	userInputService:GetPropertyChangedSignal("MouseEnabled"):Connect(IconController._determineControllerDisplay)
-	userInputService.GamepadConnected:Connect(IconController._determineControllerDisplay)
-	userInputService.GamepadDisconnected:Connect(IconController._determineControllerDisplay)
-	IconController._determineControllerDisplay()
-
-	-- Enable/Disable Controller Mode when icon clicked
-	local function iconClicked()
-		local isSelected = controllerOptionIcon.isSelected
-		local iconTip = (isSelected and "Normal mode") or "Controller mode"
-		controllerOptionIcon:setTip(iconTip)
-		IconController._enableControllerMode(isSelected)
-	end
-	controllerOptionIcon.selected:Connect(iconClicked)
-	controllerOptionIcon.deselected:Connect(iconClicked)
-
-	-- Hide/show topbar when indicator action selected in controller mode
-	userInputService.InputBegan:Connect(function(input,gpe)
-		if not IconController.controllerModeEnabled then return end
-		if input.KeyCode == Enum.KeyCode.DPadDown then
-			if not guiService.SelectedObject and checkTopbarEnabledAccountingForMimic() then
-				IconController.setTopbarEnabled(true,false)
-			end
-		elseif input.KeyCode == Enum.KeyCode.ButtonB and not IconController.disableButtonB then
-			if IconController.activeButtonBCallbacks == 1 and TopbarPlusGui.Indicator.Image == "rbxassetid://5278151556" then
-				IconController.activeButtonBCallbacks = 0
-				guiService.SelectedObject = nil
-			end
-			if IconController.activeButtonBCallbacks == 0 then
-				IconController._previousSelectedObject = guiService.SelectedObject
-				IconController._setControllerSelectedObject(nil)
-				IconController.setTopbarEnabled(false,false)
-			end
-		end
-		input:Destroy()
-	end)
-
-	-- Setup overflow icons
-	for alignment, detail in pairs(alignmentDetails) do
-		if alignment ~= "mid" then
-			local overflowName = "_overflowIcon-"..alignment
-			local overflowIcon = Icon.new()
-				:setProperty("internalIcon", true)
-				:setImage(6069276526)
-				:setName(overflowName)
-				:setEnabled(false)
-			detail.overflowIcon = overflowIcon
-			overflowIcon.accountForWhenDisabled = true
-			if alignment == "left" then
-				overflowIcon:setOrder(math.huge)
-				overflowIcon:setLeft()
-				overflowIcon:set("dropdownAlignment", "right")
-			elseif alignment == "right" then
-				overflowIcon:setOrder(-math.huge)
-				overflowIcon:setRight()
-				overflowIcon:set("dropdownAlignment", "left")
-			end
-			overflowIcon.lockedSettings = {
-				["iconImage"] = true,
-				["order"] = true,
-				["alignment"] = true,
-			}
-		end
-	end
-
-
-
-
-
-	-- This checks if voice chat is enabled
-	task.defer(function()
-		local success, enabledForUser
-		while true do
-			success, enabledForUser = pcall(function() return voiceChatService:IsVoiceEnabledForUserIdAsync(localPlayer.UserId) end)
-			if success then
-				break
-			end
-			task.wait(1)
-		end
-		local function checkVoiceChatManuallyEnabled()
-			if IconController.voiceChatEnabled then
-				if success and enabledForUser then
-					voiceChatIsEnabledForUserAndWithinExperience = true
-					IconController.updateTopbar()
-				end
-			end
-		end
-		checkVoiceChatManuallyEnabled()
-		
-		--------------- FEEL FREE TO DELETE THIS IS YOU DO NOT USE VOICE CHAT WITHIN YOUR EXPERIENCE ---------------
-		localPlayer.PlayerGui:WaitForChild("TopbarPlus", 999)
-		task.delay(10, function()
-			checkVoiceChatManuallyEnabled()
-			if IconController.voiceChatEnabled == nil and success and enabledForUser and isStudio then
-				warn("⚠️TopbarPlus Action Required⚠️ If VoiceChat is enabled within your experience it's vital you set IconController.voiceChatEnabled to true ``require(game.ReplicatedStorage.Icon.IconController).voiceChatEnabled = true`` otherwise the BETA label will not be accounted for within your live servers. This warning will disappear after doing so. Feel free to delete this warning or to set to false if you don't have VoiceChat enabled within your experience.")
-			end
-		end)
-		------------------------------------------------------------------------------------------------------------
-
-	end)
-	
-	
-	
-
-
-	if not isStudio then
-		local ownerId = game.CreatorId
-		local groupService = game:GetService("GroupService")
-		if game.CreatorType == Enum.CreatorType.Group then
-			local success, ownerInfo = pcall(function() return groupService:GetGroupInfoAsync(game.CreatorId).Owner end)
-			if success then
-				ownerId = ownerInfo.Id
-			end
-		end
-		local version = require(iconModule.VERSION)
-		if localPlayer.UserId ~= ownerId then
-			local marketplaceService = game:GetService("MarketplaceService")
-			local success, placeInfo = pcall(function() return marketplaceService:GetProductInfo(game.PlaceId) end)
-			if success and placeInfo then
-				-- Required attrbute for using TopbarPlus
-				-- This is not printed within stuido and to the game owner to prevent mixing with debug prints
-				local gameName = placeInfo.Name
-				print(("\n\n\n⚽ %s uses TopbarPlus %s\n🍍 TopbarPlus was developed by ForeverHD and the Nanoblox Team\n🚀 You can learn more and take a free copy by searching for 'TopbarPlus' on the DevForum\n\n"):format(gameName, version))
-			end
-		end
-	end
-
-end)()
 
 -- Mimic the enabling of the topbar when StarterGui:SetCore("TopbarEnabled", state) is called
 coroutine.wrap(function()
